@@ -1,12 +1,5 @@
-<script setup lang="ts">
-import { useRouter } from "vue-router";
+<script setup lang="ts" name="403">
 import noAccess from "@/assets/status/403.svg?component";
-
-defineOptions({
-  name: "403"
-});
-
-const router = useRouter();
 </script>
 
 <template>
@@ -14,7 +7,7 @@ const router = useRouter();
     <noAccess />
     <div class="ml-12">
       <p
-        class="font-medium text-4xl mb-4 dark:text-white"
+        class="mb-4 text-4xl font-medium dark:text-white"
         v-motion
         :initial="{
           opacity: 0,
@@ -49,7 +42,7 @@ const router = useRouter();
       </p>
       <el-button
         type="primary"
-        @click="router.push('/')"
+        @click="$router.push('/')"
         v-motion
         :initial="{
           opacity: 0,

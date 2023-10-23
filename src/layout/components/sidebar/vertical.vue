@@ -5,20 +5,19 @@ import { emitter } from "@/utils/mitt";
 import SidebarItem from "./sidebarItem.vue";
 import leftCollapse from "./leftCollapse.vue";
 import { useNav } from "@/layout/hooks/useNav";
-import { responsiveStorageNameSpace } from "@/config";
-import { storageLocal, isAllEmpty } from "@pureadmin/utils";
+import { storageLocal } from "@pureadmin/utils";
+import { ref, computed, watch, onBeforeMount } from "vue";
 import { findRouteByPath, getParentPaths } from "@/router/utils";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 
 const route = useRoute();
 const showLogo = ref(
-  storageLocal().getItem<StorageConfigs>(
-    `${responsiveStorageNameSpace()}configure`
-  )?.showLogo ?? true
+  storageLocal().getItem<StorageConfigs>("responsive-configure")?.showLogo ??
+    true
 );
 
-const { device, pureApp, isCollapse, menuSelect, toggleSideBar } = useNav();
+const { routers, device, pureApp, isCollapse, menuSelect, toggleSideBar } =
+  useNav();
 
 const subMenuData = ref([]);
 
@@ -28,18 +27,7 @@ const menuData = computed(() => {
     : usePermissionStoreHook().wholeMenus;
 });
 
-const loading = computed(() =>
-  pureApp.layout === "mix" ? false : menuData.value.length === 0 ? true : false
-);
-
-const defaultActive = computed(() =>
-  !isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path
-);
-
-function getSubMenuData() {
-  let path = "";
-  path = defaultActive.value;
-  subMenuData.value = [];
+function getSubMenuData(path: string) {
   // path的上级路由组成的数组
   const parentPathArr = getParentPaths(
     path,
@@ -54,32 +42,26 @@ function getSubMenuData() {
   subMenuData.value = parenetRoute?.children;
 }
 
-watch(
-  () => [route.path, usePermissionStoreHook().wholeMenus],
-  () => {
-    if (route.path.includes("/redirect")) return;
-    getSubMenuData();
-    menuSelect(route.path);
-  }
-);
+getSubMenuData(route.path);
 
-onMounted(() => {
-  getSubMenuData();
-
+onBeforeMount(() => {
   emitter.on("logoChange", key => {
     showLogo.value = key;
   });
 });
 
-onBeforeUnmount(() => {
-  // 解绑`logoChange`公共事件，防止多次触发
-  emitter.off("logoChange");
-});
+watch(
+  () => [route.path, usePermissionStoreHook().wholeMenus],
+  () => {
+    getSubMenuData(route.path);
+    menuSelect(route.path, routers);
+  }
+);
 </script>
 
 <template>
   <div
-    v-loading="loading"
+    v-loading="menuData.length === 0"
     :class="['sidebar-container', showLogo ? 'has-logo' : '']"
   >
     <Logo v-if="showLogo" :collapse="isCollapse" />
@@ -91,17 +73,18 @@ onBeforeUnmount(() => {
         router
         unique-opened
         mode="vertical"
-        class="outer-most select-none"
+        class="select-none outer-most"
         :collapse="isCollapse"
-        :default-active="defaultActive"
+        :default-active="route.path"
         :collapse-transition="false"
+        @select="indexPath => menuSelect(indexPath, routers)"
       >
         <sidebar-item
           v-for="routes in menuData"
           :key="routes.path"
           :item="routes"
           :base-path="routes.path"
-          class="outer-most select-none"
+          class="select-none outer-most"
         />
       </el-menu>
     </el-scrollbar>

@@ -15,9 +15,10 @@ export default [
     path: "/redirect",
     component: Layout,
     meta: {
-      title: "加载中...",
+      icon: "homeFilled",
+      title: "首页",
       showLink: false,
-      rank: 102
+      rank: 104
     },
     children: [
       {

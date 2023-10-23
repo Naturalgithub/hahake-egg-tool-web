@@ -10,12 +10,12 @@ const include = [
   "dayjs",
   "axios",
   "pinia",
+  "echarts",
   "js-cookie",
-  "sortablejs",
-  "pinyin-pro",
   "@vueuse/core",
   "@pureadmin/utils",
-  "responsive-storage"
+  "responsive-storage",
+  "element-resize-detector"
 ];
 
 /**

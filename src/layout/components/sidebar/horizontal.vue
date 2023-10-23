@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
+import { ref, watch, nextTick } from "vue";
 import SidebarItem from "./sidebarItem.vue";
-import { isAllEmpty } from "@pureadmin/utils";
-import { ref, nextTick, computed } from "vue";
 import { useNav } from "@/layout/hooks/useNav";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
@@ -14,21 +13,25 @@ const menuRef = ref();
 const {
   route,
   title,
+  routers,
   logout,
-  backTopMenu,
+  backHome,
   onPanel,
+  menuSelect,
   username,
-  userAvatar,
   avatarsStyle
 } = useNav();
-
-const defaultActive = computed(() =>
-  !isAllEmpty(route.meta?.activePath) ? route.meta.activePath : route.path
-);
 
 nextTick(() => {
   menuRef.value?.handleResize();
 });
+
+watch(
+  () => route.path,
+  () => {
+    menuSelect(route.path, routers);
+  }
+);
 </script>
 
 <template>
@@ -36,7 +39,7 @@ nextTick(() => {
     v-loading="usePermissionStoreHook().wholeMenus.length === 0"
     class="horizontal-header"
   >
-    <div class="horizontal-header-left" @click="backTopMenu">
+    <div class="horizontal-header-left" @click="backHome">
       <img src="/logo.svg" alt="logo" />
       <span>{{ title }}</span>
     </div>
@@ -45,7 +48,8 @@ nextTick(() => {
       ref="menuRef"
       mode="horizontal"
       class="horizontal-header-menu"
-      :default-active="defaultActive"
+      :default-active="route.path"
+      @select="indexPath => menuSelect(indexPath, routers)"
     >
       <sidebar-item
         v-for="route in usePermissionStoreHook().wholeMenus"
@@ -62,7 +66,10 @@ nextTick(() => {
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover">
-          <img :src="userAvatar" :style="avatarsStyle" />
+          <img
+            src="https://avatars.githubusercontent.com/u/44761321?v=4"
+            :style="avatarsStyle"
+          />
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
@@ -97,9 +104,9 @@ nextTick(() => {
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
+    min-width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
-    min-width: 100%;
   }
 }
 </style>

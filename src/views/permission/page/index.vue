@@ -1,13 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" name="PermissionPage">
 import { initRouter } from "@/router/utils";
-import { storageSession } from "@pureadmin/utils";
-import { type CSSProperties, ref, computed } from "vue";
-import { useUserStoreHook } from "@/store/modules/user";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-
-defineOptions({
-  name: "PermissionPage"
-});
+import { useUserStoreHook } from "@/store/modules/user";
+import { storageSession } from "@pureadmin/utils";
+import { computed, ref, type CSSProperties } from "vue";
 
 const elStyle = computed((): CSSProperties => {
   return {

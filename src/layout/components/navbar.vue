@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import Search from "./search/index.vue";
-import Notice from "./notice/index.vue";
-import mixNav from "./sidebar/mixNav.vue";
+// import Notice from "./notice/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
-import Breadcrumb from "./sidebar/breadCrumb.vue";
-import topCollapse from "./sidebar/topCollapse.vue";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
+import Breadcrumb from "./sidebar/breadCrumb.vue";
+import mixNav from "./sidebar/mixNav.vue";
+import topCollapse from "./sidebar/topCollapse.vue";
 
 const {
   layout,
@@ -15,7 +15,6 @@ const {
   onPanel,
   pureApp,
   username,
-  userAvatar,
   avatarsStyle,
   toggleSideBar
 } = useNav();
@@ -43,11 +42,14 @@ const {
       <!-- 菜单搜索 -->
       <Search />
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <!-- <Notice id="header-notice" /> -->
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
-        <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
+        <span class="select-none el-dropdown-link navbar-bg-hover">
+          <img
+            src="https://avatars.githubusercontent.com/u/44761321?v=4"
+            :style="avatarsStyle"
+          />
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
@@ -80,28 +82,28 @@ const {
   overflow: hidden;
 
   .hamburger-container {
-    float: left;
-    height: 100%;
     line-height: 48px;
+    height: 100%;
+    float: left;
     cursor: pointer;
   }
 
   .vertical-header-right {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
     min-width: 280px;
     height: 48px;
+    align-items: center;
     color: #000000d9;
+    justify-content: flex-end;
 
     .el-dropdown-link {
+      height: 48px;
+      padding: 10px;
       display: flex;
       align-items: center;
       justify-content: space-around;
-      height: 48px;
-      padding: 10px;
-      color: #000000d9;
       cursor: pointer;
+      color: #000000d9;
 
       p {
         font-size: 14px;
@@ -125,9 +127,9 @@ const {
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
+    min-width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
-    min-width: 100%;
   }
 }
 </style>

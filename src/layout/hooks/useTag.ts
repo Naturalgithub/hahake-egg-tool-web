@@ -1,34 +1,33 @@
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { useSettingStoreHook } from "@/store/modules/settings";
 import {
+  hasClass,
+  isBoolean,
+  isEqual,
+  storageLocal,
+  toggleClass
+} from "@pureadmin/utils";
+import { useEventListener } from "@vueuse/core";
+import {
+  CSSProperties,
+  computed,
+  getCurrentInstance,
+  onMounted,
+  reactive,
   ref,
   unref,
-  watch,
-  computed,
-  reactive,
-  onMounted,
-  CSSProperties,
-  getCurrentInstance
+  watch
 } from "vue";
-import { tagsViewsType } from "../types";
-import { useEventListener } from "@vueuse/core";
 import { useRoute, useRouter } from "vue-router";
-import { responsiveStorageNameSpace } from "@/config";
-import { useSettingStoreHook } from "@/store/modules/settings";
-import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import {
-  isEqual,
-  isBoolean,
-  storageLocal,
-  toggleClass,
-  hasClass
-} from "@pureadmin/utils";
+import { tagsViewsType } from "../types";
 
+import Close from "@iconify-icons/ep/close";
+import RefreshRight from "@iconify-icons/ep/refresh-right";
 import Fullscreen from "@iconify-icons/ri/fullscreen-fill";
 import CloseAllTags from "@iconify-icons/ri/subtract-line";
-import CloseOtherTags from "@iconify-icons/ri/text-spacing";
 import CloseRightTags from "@iconify-icons/ri/text-direction-l";
 import CloseLeftTags from "@iconify-icons/ri/text-direction-r";
-import RefreshRight from "@iconify-icons/ep/refresh-right";
-import Close from "@iconify-icons/ep/close";
+import CloseOtherTags from "@iconify-icons/ri/text-spacing";
 
 export function useTags() {
   const route = useRoute();
@@ -46,16 +45,13 @@ export function useTags() {
 
   /** 显示模式，默认灵动模式 */
   const showModel = ref(
-    storageLocal().getItem<StorageConfigs>(
-      `${responsiveStorageNameSpace()}configure`
-    )?.showModel || "smart"
+    storageLocal().getItem<StorageConfigs>("responsive-configure")?.showModel ||
+      "smart"
   );
   /** 是否隐藏标签页，默认显示 */
   const showTags =
     ref(
-      storageLocal().getItem<StorageConfigs>(
-        `${responsiveStorageNameSpace()}configure`
-      ).hideTabs
+      storageLocal().getItem<StorageConfigs>("responsive-configure").hideTabs
     ) ?? ref("false");
   const multiTags: any = computed(() => {
     return useMultiTagsStoreHook().multiTags;
@@ -204,13 +200,10 @@ export function useTags() {
   onMounted(() => {
     if (!showModel.value) {
       const configure = storageLocal().getItem<StorageConfigs>(
-        `${responsiveStorageNameSpace()}configure`
+        "responsive-configure"
       );
       configure.showModel = "card";
-      storageLocal().setItem(
-        `${responsiveStorageNameSpace()}configure`,
-        configure
-      );
+      storageLocal().setItem("responsive-configure", configure);
     }
   });
 

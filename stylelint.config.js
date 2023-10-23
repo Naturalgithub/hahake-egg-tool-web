@@ -1,39 +1,20 @@
 module.exports = {
   root: true,
-  extends: [
-    "stylelint-config-standard",
-    "stylelint-config-html/vue",
-    "stylelint-config-recess-order"
-  ],
-  plugins: ["stylelint-order", "stylelint-prettier", "stylelint-scss"],
-  overrides: [
-    {
-      files: ["**/*.(css|html|vue)"],
-      customSyntax: "postcss-html"
-    },
-    {
-      files: ["*.scss", "**/*.scss"],
-      customSyntax: "postcss-scss",
-      extends: [
-        "stylelint-config-standard-scss",
-        "stylelint-config-recommended-vue/scss"
-      ]
-    }
-  ],
+  plugins: ["stylelint-order"],
+  customSyntax: "postcss-html",
+  extends: ["stylelint-config-standard", "stylelint-config-prettier"],
   rules: {
     "selector-class-pattern": null,
-    "no-descending-specificity": null,
-    "scss/dollar-variable-pattern": null,
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        ignorePseudoClasses: ["deep", "global"]
+        ignorePseudoClasses: ["global"]
       }
     ],
     "selector-pseudo-element-no-unknown": [
       true,
       {
-        ignorePseudoElements: ["v-deep", "v-global", "v-slotted"]
+        ignorePseudoElements: ["v-deep"]
       }
     ],
     "at-rule-no-unknown": [
@@ -49,11 +30,17 @@ module.exports = {
           "if",
           "each",
           "include",
-          "mixin",
-          "use"
+          "mixin"
         ]
       }
     ],
+    "no-empty-source": null,
+    "named-grid-areas-no-invalid": null,
+    "unicode-bom": "never",
+    "no-descending-specificity": null,
+    "font-family-no-missing-generic-family-keyword": null,
+    "declaration-colon-space-after": "always-single-line",
+    "declaration-colon-space-before": "never",
     "rule-empty-line-before": [
       "always",
       {
@@ -80,5 +67,26 @@ module.exports = {
       { severity: "warning" }
     ]
   },
-  ignoreFiles: ["**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx"]
+  ignoreFiles: ["**/*.js", "**/*.jsx", "**/*.tsx", "**/*.ts", "**/*.json"],
+  overrides: [
+    {
+      files: ["*.vue", "**/*.vue", "*.html", "**/*.html"],
+      extends: ["stylelint-config-recommended", "stylelint-config-html"],
+      rules: {
+        "keyframes-name-pattern": null,
+        "selector-pseudo-class-no-unknown": [
+          true,
+          {
+            ignorePseudoClasses: ["deep", "global"]
+          }
+        ],
+        "selector-pseudo-element-no-unknown": [
+          true,
+          {
+            ignorePseudoElements: ["v-deep", "v-global", "v-slotted"]
+          }
+        ]
+      }
+    }
+  ]
 };

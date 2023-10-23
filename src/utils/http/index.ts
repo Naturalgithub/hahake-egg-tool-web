@@ -1,18 +1,18 @@
+import { useUserStoreHook } from "@/store/modules/user";
+import { formatToken, getToken } from "@/utils/auth";
 import Axios, {
   AxiosInstance,
   AxiosRequestConfig,
   CustomParamsSerializer
 } from "axios";
-import {
-  PureHttpError,
-  RequestMethods,
-  PureHttpResponse,
-  PureHttpRequestConfig
-} from "./types.d";
 import { stringify } from "qs";
 import NProgress from "../progress";
-import { getToken, formatToken } from "@/utils/auth";
-import { useUserStoreHook } from "@/store/modules/user";
+import {
+  PureHttpError,
+  PureHttpRequestConfig,
+  PureHttpResponse,
+  RequestMethods
+} from "./types.d";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -60,10 +60,10 @@ class PureHttp {
   /** 请求拦截 */
   private httpInterceptorsRequest(): void {
     PureHttp.axiosInstance.interceptors.request.use(
-      async (config: PureHttpRequestConfig): Promise<any> => {
+      async (config: PureHttpRequestConfig) => {
         // 开启进度条动画
         NProgress.start();
-        // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
+        // 优先判断post/get等方法是否传入回掉，否则执行初始化设置等回掉
         if (typeof config.beforeRequestCallback === "function") {
           config.beforeRequestCallback(config);
           return config;
@@ -123,7 +123,8 @@ class PureHttp {
         const $config = response.config;
         // 关闭进度条动画
         NProgress.done();
-        // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
+        console.log(response, 123);
+        // 优先判断post/get等方法是否传入回掉，否则执行初始化设置等回掉
         if (typeof $config.beforeResponseCallback === "function") {
           $config.beforeResponseCallback(response);
           return response.data;
@@ -159,7 +160,7 @@ class PureHttp {
       ...axiosConfig
     } as PureHttpRequestConfig;
 
-    // 单独处理自定义请求/响应回调
+    // 单独处理自定义请求/响应回掉
     return new Promise((resolve, reject) => {
       PureHttp.axiosInstance
         .request(config)

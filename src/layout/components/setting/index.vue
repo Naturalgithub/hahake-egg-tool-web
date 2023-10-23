@@ -218,6 +218,7 @@ watch($storage, ({ layout }) => {
 });
 
 onBeforeMount(() => {
+  dataThemeChange();
   /* 初始化项目配置 */
   nextTick(() => {
     settings.greyVal &&
@@ -417,35 +418,35 @@ onBeforeMount(() => {
 
   li {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     margin: 25px;
   }
 }
 
 .pure-datatheme {
-  display: block;
   width: 100%;
   height: 50px;
-  padding-top: 25px;
   text-align: center;
+  display: block;
+  padding-top: 25px;
 }
 
 .pure-theme {
+  margin-top: 25px;
+  width: 100%;
+  height: 50px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  width: 100%;
-  height: 50px;
-  margin-top: 25px;
 
   li {
-    position: relative;
     width: 18%;
     height: 45px;
+    background: #f0f2f5;
+    position: relative;
     overflow: hidden;
     cursor: pointer;
-    background: #f0f2f5;
     border-radius: 4px;
     box-shadow: 0 1px 2.5px 0 rgb(0 0 0 / 18%);
 
@@ -458,13 +459,13 @@ onBeforeMount(() => {
         }
 
         &:nth-child(2) {
-          position: absolute;
-          top: 0;
-          right: 0;
           width: 70%;
           height: 30%;
+          top: 0;
+          right: 0;
           background: #fff;
           box-shadow: 0 0 1px #888;
+          position: absolute;
         }
       }
     }
@@ -490,13 +491,13 @@ onBeforeMount(() => {
         }
 
         &:nth-child(2) {
-          position: absolute;
-          bottom: 0;
-          left: 0;
           width: 30%;
           height: 70%;
+          bottom: 0;
+          left: 0;
           background: #fff;
           box-shadow: 0 0 1px #888;
+          position: absolute;
         }
       }
     }
@@ -504,11 +505,11 @@ onBeforeMount(() => {
 }
 
 .theme-color {
-  display: flex;
-  justify-content: center;
   width: 100%;
   height: 40px;
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 
   li {
     float: left;
@@ -518,8 +519,8 @@ onBeforeMount(() => {
     margin-right: 8px;
     font-weight: 700;
     text-align: center;
-    cursor: pointer;
     border-radius: 2px;
+    cursor: pointer;
 
     &:nth-child(2) {
       border: 1px solid #ddd;

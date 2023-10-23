@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useGlobal } from "@pureadmin/utils";
 import backTop from "@/assets/svg/back_top.svg?component";
-import { h, computed, Transition, defineComponent } from "vue";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { useGlobal } from "@pureadmin/utils";
+import { Transition, computed, defineComponent, h } from "vue";
 
 const props = defineProps({
   fixedHeader: Boolean
@@ -130,19 +130,21 @@ const transitionMain = defineComponent({
 
 <style scoped>
 .app-main {
-  position: relative;
   width: 100%;
   height: 100vh;
+  position: relative;
   overflow-x: hidden;
 }
 
 .app-main-nofixed-header {
-  position: relative;
   width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
+/* 这里计算了!! */
 .main-content {
-  margin: 24px;
+  height: calc(100vh - 86px);
+  padding: 10px;
 }
 </style>

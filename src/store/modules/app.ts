@@ -1,7 +1,7 @@
 import { store } from "@/store";
 import { appType } from "./types";
 import { defineStore } from "pinia";
-import { getConfig, responsiveStorageNameSpace } from "@/config";
+import { getConfig } from "@/config";
 import { deviceDetection, storageLocal } from "@pureadmin/utils";
 
 export const useAppStore = defineStore({
@@ -9,32 +9,29 @@ export const useAppStore = defineStore({
   state: (): appType => ({
     sidebar: {
       opened:
-        storageLocal().getItem<StorageConfigs>(
-          `${responsiveStorageNameSpace()}layout`
-        )?.sidebarStatus ?? getConfig().SidebarStatus,
+        storageLocal().getItem<StorageConfigs>("responsive-layout")
+          ?.sidebarStatus ?? getConfig().SidebarStatus,
       withoutAnimation: false,
       isClickCollapse: false
     },
     // 这里的layout用于监听容器拖拉后恢复对应的导航模式
     layout:
-      storageLocal().getItem<StorageConfigs>(
-        `${responsiveStorageNameSpace()}layout`
-      )?.layout ?? getConfig().Layout,
+      storageLocal().getItem<StorageConfigs>("responsive-layout")?.layout ??
+      getConfig().Layout,
     device: deviceDetection() ? "mobile" : "desktop"
   }),
   getters: {
-    getSidebarStatus(state) {
-      return state.sidebar.opened;
+    getSidebarStatus() {
+      return this.sidebar.opened;
     },
-    getDevice(state) {
-      return state.device;
+    getDevice() {
+      return this.device;
     }
   },
   actions: {
     TOGGLE_SIDEBAR(opened?: boolean, resize?: string) {
-      const layout = storageLocal().getItem<StorageConfigs>(
-        `${responsiveStorageNameSpace()}layout`
-      );
+      const layout =
+        storageLocal().getItem<StorageConfigs>("responsive-layout");
       if (opened && resize) {
         this.sidebar.withoutAnimation = true;
         this.sidebar.opened = true;
@@ -49,7 +46,7 @@ export const useAppStore = defineStore({
         this.sidebar.isClickCollapse = !this.sidebar.opened;
         layout.sidebarStatus = this.sidebar.opened;
       }
-      storageLocal().setItem(`${responsiveStorageNameSpace()}layout`, layout);
+      storageLocal().setItem("responsive-layout", layout);
     },
     async toggleSideBar(opened?: boolean, resize?: string) {
       await this.TOGGLE_SIDEBAR(opened, resize);

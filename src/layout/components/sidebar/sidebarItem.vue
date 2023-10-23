@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import path from "path";
-import { getConfig } from "@/config";
-import { menuType } from "../../types";
-import extraIcon from "./extraIcon.vue";
-import { useNav } from "@/layout/hooks/useNav";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { ref, toRaw, PropType, nextTick, computed, CSSProperties } from "vue";
+import { getConfig } from "@/config";
+import { useNav } from "@/layout/hooks/useNav";
+import path from "path";
+import { CSSProperties, PropType, computed, nextTick, ref, toRaw } from "vue";
+import { childrenType } from "../../types";
+import extraIcon from "./extraIcon.vue";
 
-import ArrowUp from "@iconify-icons/ep/arrow-up-bold";
 import EpArrowDown from "@iconify-icons/ep/arrow-down-bold";
 import ArrowLeft from "@iconify-icons/ep/arrow-left-bold";
 import ArrowRight from "@iconify-icons/ep/arrow-right-bold";
+import ArrowUp from "@iconify-icons/ep/arrow-up-bold";
 
 const { layout, isCollapse, tooltipEffect, getDivStyle } = useNav();
 
 const props = defineProps({
   item: {
-    type: Object as PropType<menuType>
+    type: Object as PropType<childrenType>
   },
   isNest: {
     type: Boolean,
@@ -111,7 +111,7 @@ const expandCloseIcon = computed(() => {
   };
 });
 
-const onlyOneChild: menuType = ref(null);
+const onlyOneChild: childrenType = ref(null);
 // 存放菜单是否存在showTooltip属性标识
 const hoverMenuMap = new WeakMap();
 // 存储菜单文本dom元素
@@ -148,7 +148,10 @@ function overflowSlice(text, item?: any) {
   return newText;
 }
 
-function hasOneShowingChild(children: menuType[] = [], parent: menuType) {
+function hasOneShowingChild(
+  children: childrenType[] = [],
+  parent: childrenType
+) {
   const showingChildren = children.filter((item: any) => {
     onlyOneChild.value = item;
     return true;

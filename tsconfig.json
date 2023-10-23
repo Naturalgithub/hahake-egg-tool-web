@@ -18,17 +18,12 @@
     "allowJs": false,
     "resolveJsonModule": true,
     "lib": ["dom", "esnext"],
+    "incremental": true,
     "paths": {
       "@/*": ["src/*"],
       "@build/*": ["build/*"]
     },
-    "types": [
-      "node",
-      "vite/client",
-      "element-plus/global",
-      "@pureadmin/table/volar",
-      "@pureadmin/descriptions/volar"
-    ]
+    "typeRoots": ["./node_modules/@types/", "./types"]
   },
   "include": [
     "mock/*.ts",
@@ -38,5 +33,5 @@
     "types/*.d.ts",
     "vite.config.ts"
   ],
-  "exclude": ["dist", "**/*.js", "node_modules"]
+  "exclude": ["node_modules", "ns", "**/*.js"]
 }

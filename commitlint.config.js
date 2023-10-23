@@ -1,3 +1,5 @@
+const { test } = require("node:test");
+
 module.exports = {
   ignores: [commit => commit.includes("init")],
   extends: ["@commitlint/config-conventional"],
@@ -28,5 +30,5 @@ module.exports = {
         "release"
       ]
     ]
-  }
+  },
 };

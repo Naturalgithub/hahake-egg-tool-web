@@ -1,11 +1,10 @@
 import dayjs from "dayjs";
 import { resolve } from "path";
-import pkg from "./package.json";
+import { ConfigEnv, UserConfigExport, loadEnv } from "vite";
 import { warpperEnv } from "./build";
+import { exclude, include } from "./build/optimize";
 import { getPluginsList } from "./build/plugins";
-import { include, exclude } from "./build/optimize";
-import { UserConfigExport, ConfigEnv, loadEnv } from "vite";
-
+import pkg from "./package.json";
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
 
@@ -43,7 +42,9 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       port: VITE_PORT,
       host: "0.0.0.0",
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
-      proxy: {}
+      proxy: {
+        "/proxy": "http://192.168.1.101:8080"
+      }
     },
     plugins: getPluginsList(command, VITE_CDN, VITE_COMPRESSION),
     // https://cn.vitejs.dev/config/dep-optimization-options.html#dep-optimization-options
@@ -52,6 +53,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       exclude
     },
     build: {
+      outDir: "ns",
       sourcemap: false,
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,

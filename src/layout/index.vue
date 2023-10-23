@@ -3,21 +3,12 @@ import "animate.css";
 // 引入 src/components/ReIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
 import "@/components/ReIcon/src/offlineIcon";
 import { setType } from "./types";
+import { emitter } from "@/utils/mitt";
 import { useLayout } from "./hooks/useLayout";
-import { useResizeObserver } from "@vueuse/core";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useSettingStoreHook } from "@/store/modules/settings";
 import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
-import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
-import {
-  h,
-  ref,
-  reactive,
-  computed,
-  onMounted,
-  onBeforeMount,
-  defineComponent
-} from "vue";
+import { h, reactive, computed, onMounted, defineComponent } from "vue";
 
 import navbar from "./components/navbar.vue";
 import tag from "./components/tag/index.vue";
@@ -27,7 +18,6 @@ import Vertical from "./components/sidebar/vertical.vue";
 import Horizontal from "./components/sidebar/horizontal.vue";
 import backTop from "@/assets/svg/back_top.svg?component";
 
-const appWrapperRef = ref();
 const { isDark } = useDark();
 const { layout } = useLayout();
 const isMobile = deviceDetection();
@@ -80,10 +70,10 @@ function toggle(device: string, bool: boolean) {
 // 判断是否可自动关闭菜单栏
 let isAutoCloseSidebar = true;
 
-useResizeObserver(appWrapperRef, entries => {
+// 监听容器
+emitter.on("resize", ({ detail }) => {
   if (isMobile) return;
-  const entry = entries[0];
-  const { width } = entry.contentRect;
+  const { width } = detail;
   width <= 760 ? setTheme("vertical") : setTheme(useAppStoreHook().layout);
   /** width app-wrapper类容器宽度
    * 0 < width <= 760 隐藏侧边栏
@@ -98,12 +88,11 @@ useResizeObserver(appWrapperRef, entries => {
       toggle("desktop", false);
       isAutoCloseSidebar = false;
     }
-  } else if (width > 990 && !set.sidebar.isClickCollapse) {
-    toggle("desktop", true);
-    isAutoCloseSidebar = true;
-  } else {
-    toggle("desktop", false);
-    isAutoCloseSidebar = false;
+  } else if (width > 990) {
+    if (!set.sidebar.isClickCollapse) {
+      toggle("desktop", true);
+      isAutoCloseSidebar = true;
+    }
   }
 });
 
@@ -111,10 +100,6 @@ onMounted(() => {
   if (isMobile) {
     toggle("mobile", false);
   }
-});
-
-onBeforeMount(() => {
-  useDataThemeChange().dataThemeChange();
 });
 
 const layoutHeader = defineComponent({
@@ -149,7 +134,7 @@ const layoutHeader = defineComponent({
 </script>
 
 <template>
-  <div ref="appWrapperRef" :class="['app-wrapper', set.classes]">
+  <div :class="['app-wrapper', set.classes]" v-resize>
     <div
       v-show="
         set.device === 'mobile' &&
@@ -194,16 +179,20 @@ const layoutHeader = defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.app-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-
+@mixin clearfix {
   &::after {
+    content: "";
     display: table;
     clear: both;
-    content: "";
   }
+}
+
+.app-wrapper {
+  @include clearfix;
+
+  position: relative;
+  height: 100%;
+  width: 100%;
 
   &.mobile.openSidebar {
     position: fixed;
@@ -212,13 +201,13 @@ const layoutHeader = defineComponent({
 }
 
 .app-mask {
-  position: absolute;
-  top: 0;
-  z-index: 999;
-  width: 100%;
-  height: 100%;
   background: #000;
   opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
 }
 
 .re-screen {

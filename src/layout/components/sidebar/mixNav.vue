@@ -2,7 +2,6 @@
 import extraIcon from "./extraIcon.vue";
 import Search from "../search/index.vue";
 import Notice from "../notice/index.vue";
-import { isAllEmpty } from "@pureadmin/utils";
 import { useNav } from "@/layout/hooks/useNav";
 import { ref, toRaw, watch, onMounted, nextTick } from "vue";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
@@ -17,11 +16,12 @@ const defaultActive = ref(null);
 const {
   route,
   device,
+  routers,
   logout,
   onPanel,
+  menuSelect,
   resolvePath,
   username,
-  userAvatar,
   getDivStyle,
   avatarsStyle
 } = useNav();
@@ -30,9 +30,10 @@ function getDefaultActive(routePath) {
   const wholeMenus = usePermissionStoreHook().wholeMenus;
   /** 当前路由的父级路径 */
   const parentRoutes = getParentPaths(routePath, wholeMenus)[0];
-  defaultActive.value = !isAllEmpty(route.meta?.activePath)
-    ? route.meta.activePath
-    : findRouteByPath(parentRoutes, wholeMenus)?.children[0]?.path;
+  defaultActive.value = findRouteByPath(
+    parentRoutes,
+    wholeMenus
+  )?.children[0]?.path;
 }
 
 onMounted(() => {
@@ -63,6 +64,7 @@ watch(
       mode="horizontal"
       class="horizontal-header-menu"
       :default-active="defaultActive"
+      @select="indexPath => menuSelect(indexPath, routers)"
     >
       <el-menu-item
         v-for="route in usePermissionStoreHook().wholeMenus"
@@ -95,7 +97,10 @@ watch(
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
-          <img :src="userAvatar" :style="avatarsStyle" />
+          <img
+            src="https://avatars.githubusercontent.com/u/44761321?v=4"
+            :style="avatarsStyle"
+          />
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
@@ -130,9 +135,9 @@ watch(
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
+    min-width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
-    min-width: 100%;
   }
 }
 </style>

@@ -1,7 +1,8 @@
-@import "./transition";
-@import "./element-plus";
-@import "./sidebar";
-@import "./dark";
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./sidebar.scss";
+@import "./dark.scss";
+@import "./element-plus.scss";
 
 /* 自定义全局 CssVar */
 :root {
