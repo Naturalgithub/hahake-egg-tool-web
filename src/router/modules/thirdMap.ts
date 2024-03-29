@@ -4,7 +4,7 @@ export default {
   meta: {
     icon: "homeFilled",
     title: "三方管理",
-    // showLink: false,
+    showLink: false,
     rank: 10
   },
   children: [

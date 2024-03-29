@@ -1,7 +1,6 @@
-<script setup lang="ts" name="Welcome">
-//
+<script setup lang="tsx">
+console.log("index");
 </script>
-
 <template>
-  <h1>首页</h1>
+  <div>index</div>
 </template>

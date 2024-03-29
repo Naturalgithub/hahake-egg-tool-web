@@ -4,7 +4,7 @@ export default {
   meta: {
     icon: "homeFilled",
     title: "惠达测试",
-    // showLink: false,
+    showLink: false,
     rank: 0
   },
   children: [
